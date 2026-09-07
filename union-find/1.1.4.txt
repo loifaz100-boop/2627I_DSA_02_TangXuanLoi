@@ -1,0 +1,51 @@
+Câu 4
+
+parent[]:
+
+0 0 0 0 4 4 4 5 ? 8
+
+Ta có các cây:
+
+Cây gốc 0:
+
+0
+
+/ |
+1 2 3
+
+size = 4
+
+Cây gốc 4:
+
+4
+
+/
+5 6
+|
+7
+
+size = 4
+
+Cây gốc 8:
+
+8
+|
+9
+
+size = 2
+
+Trong weighted quick-union, parent[8] chỉ có thể trỏ đến root của một cây khác có kích thước lớn hơn hoặc bằng cây chứa 8.
+
+Cây chứa 8 có size = 2.
+
+Các root có thể nhận 8 là:
+
+0: size 4
+4: size 4
+8: chính nó
+
+Vậy:
+
+parent[8] = 0, 4 hoặc 8
+
+Đáp án: 0, 4, 8

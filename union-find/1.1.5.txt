@@ -1,0 +1,78 @@
+Câu 5
+
+parent[]:
+
+5 6 0 4 0 5 0 5 6 7
+
+Vẽ cây:
+
+    5
+   / \
+  0   7
+/ | \  \
+
+2 4 6 9
+| |
+3 1
+|
+8
+
+Kiểm tra các cây:
+
+Cây gốc 5 có tất cả 10 node.
+
+Ta cần xem cấu trúc này có thể được tạo bởi weighted quick-union hay không.
+
+Xét cạnh 6 -> 0.
+
+Cây chứa 6 trước khi nối có:
+
+6
+|
+1
+|
+8
+
+size = 3
+
+Cây chứa 0 trước khi nối có:
+
+0
+|
+2
+
+và 4 -> 0, 3 -> 4
+
+nên size của cây chứa 0 là 4.
+
+Vì 3 < 4 nên nối cây chứa 6 vào cây chứa 0 là hợp lệ.
+
+Xét cạnh 7 -> 5.
+
+Cây chứa 7 có node 7 và 9, size = 2.
+
+Cây chứa 5 có node 5 và phần cây bên dưới nó. Nếu chưa nối với 7 thì cây chứa 5 có size lớn hơn 2.
+
+Vì vậy 7 -> 5 cũng hợp lệ.
+
+Tuy nhiên, vấn đề nằm ở cạnh 0 -> 5.
+
+Tại thời điểm cây chứa 0 được nối vào 5, cây chứa 0 có size = 7 và cây chứa 5 có size = 3.
+
+Weighted quick-union yêu cầu cây nhỏ hơn phải nối vào cây lớn hơn.
+
+Nhưng ở đây:
+
+size(cây 0) > size(cây 5)
+
+mà lại có:
+
+0 -> 5
+
+Do đó không thể xảy ra.
+
+Kết luận:
+
+Câu 5: KHÔNG thể là biểu diễn của weighted quick-union.
+
+Đáp án: Không.

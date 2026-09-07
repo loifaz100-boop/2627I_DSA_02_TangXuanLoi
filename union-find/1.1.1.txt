@@ -1,0 +1,17 @@
+Bài 1 — Tìm bug trong hàm union() của Quick-Find
+
+Bug:
+Trong vòng lặp, điều kiện leader[i] == leader[p] sử dụng trực tiếp leader[p]. Tuy nhiên, leader[p] có thể bị thay đổi trong quá trình vòng lặp chạy, dẫn đến một số phần tử thuộc cùng tập với p không được cập nhật.
+
+Cách sửa:
+Lưu giá trị ban đầu của leader[p] và leader[q] vào hai biến tạm trước khi chạy vòng lặp.
+
+public void union(int p, int q) {
+    int pid = leader[p];
+    int qid = leader[q];
+
+    for (int i = 0; i < leader.length; i++) {
+        if (leader[i] == pid)
+            leader[i] = qid;
+    }
+}

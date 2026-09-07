@@ -1,0 +1,77 @@
+Bài 2 - Union-Find
+
+Cho n phần tử, thực hiện chuỗi thao tác:
+
+union(0,1), union(0,2), union(0,3), ..., union(0,n-1)
+
+(a) Số thành phần liên thông
+
+Ban đầu có n thành phần riêng biệt.
+
+Có n - 1 phép union, và mỗi phép union làm giảm số thành phần đi 1.
+
+Vậy:
+
+n - (n - 1) = 1
+
+Đáp án: 1
+
+(b) Quick-Find
+
+Trong Quick-Find, union(p,q) phải duyệt qua toàn bộ mảng và cập nhật các phần tử thuộc component của p.
+
+Số lần cập nhật:
+
+union(0,1): 1 lần
+union(0,2): 2 lần
+union(0,3): 3 lần
+...
+union(0,n-1): n-1 lần
+
+Tổng số lần cập nhật:
+
+1 + 2 + 3 + ... + (n-1)
+= n(n-1)/2
+
+Theo ký hiệu xấp xỉ:
+
+~ n^2 / 2
+
+(c) Quick-Union
+
+Trong Quick-Union, parent[q] không thay đổi.
+
+Sau các phép union, cây có dạng:
+
+0 -> 1 -> 2 -> 3 -> ... -> n-1
+
+Khi gọi find(0), phải đi qua toàn bộ n phần tử để tìm root.
+
+Vì vậy số lần truy cập mảng là:
+
+Theta(n)
+
+Đáp án: Theta(n)
+
+(d) Weighted Quick-Union
+
+Weighted Quick-Union luôn nối cây nhỏ vào cây lớn.
+
+Sau union(0,1), cây chứa 0 có kích thước 2.
+
+Sau đó, mỗi phần tử mới 2, 3, ..., n-1 đều tạo thành cây có kích thước 1, nhỏ hơn cây chứa 0.
+
+Vì vậy tất cả đều được nối trực tiếp vào 0:
+
+   0
+/  |  |  \
+
+1 2 3 ... n-1
+
+Do 0 luôn là root nên find(0) chỉ cần kiểm tra parent[0].
+
+Vì vậy số lần truy cập mảng là:
+
+Theta(1)
+
+Đáp án: Theta(1)​
