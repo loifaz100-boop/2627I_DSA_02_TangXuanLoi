@@ -1,0 +1,47 @@
+ALGORITHM FourSum(nums, target):
+
+    SORT nums
+
+    result ← danh sách rỗng
+    n ← độ dài nums
+
+    FOR i ← 0 TO n - 4:
+
+        IF i > 0 AND nums[i] = nums[i - 1]:
+            CONTINUE
+
+        FOR j ← i + 1 TO n - 3:
+
+            IF j > i + 1 AND nums[j] = nums[j - 1]:
+                CONTINUE
+
+            left ← j + 1
+            right ← n - 1
+
+            WHILE left < right:
+
+                sum ← nums[i] + nums[j] + nums[left] + nums[right]
+
+                IF sum = target:
+
+                    THÊM [nums[i], nums[j], nums[left], nums[right]]
+                    VÀO result
+
+                    left ← left + 1
+                    right ← right - 1
+
+                    WHILE left < right AND nums[left] = nums[left - 1]:
+                        left ← left + 1
+
+                    WHILE left < right AND nums[right] = nums[right + 1]:
+                        right ← right - 1
+
+                ELSE IF sum < target:
+
+                    left ← left + 1
+
+                ELSE:
+
+                    right ← right - 1
+
+    RETURN result

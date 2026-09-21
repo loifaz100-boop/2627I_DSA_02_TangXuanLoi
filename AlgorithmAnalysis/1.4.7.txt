@@ -1,0 +1,14 @@
+Phân tích thuật toán ThreeSum (Duyệt toàn bộ)
+
+Số vòng lặp lồng nhau: 3 vòng lặp (i, j, k)
+Tổng số lần thực thi khối lệnh trong cùng: C(N, 3) = N(N-1)(N-2)/6 ~ (1/6)N^3
+
+Thống kê chi phí các phép toán (Thao tác: Tần suất chính xác -> Xấp xỉ):
+
+Phép cộng mảng (a[i] + a[j] + a[k]): 2 * [N(N-1)(N-2)/6] -> ~ (1/3)N^3
+
+Phép tăng biến đếm (k++): N(N-1)(N-2)/6 -> ~ (1/6)N^3
+
+Phép so sánh bằng (== 0): N(N-1)(N-2)/6 -> ~ (1/6)N^3
+
+So sánh điều kiện lặp (k < N): N(N-1)(N-2)/6 + N(N-1)/2 -> ~ (1/6)N^3

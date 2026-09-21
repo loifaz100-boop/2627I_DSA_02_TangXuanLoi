@@ -1,0 +1,133 @@
+package org.example;
+
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.Stopwatch;
+import edu.princeton.cs.algs4.ThreeSum;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    // Hàm tiện ích: Biến đổi một giá trị từ thang đo cũ sang thang đo mới (dùng để chia màn hình)
+    private static double map(double value, double minIn, double maxIn, double minOut, double maxOut) {
+        if (maxIn == minIn) return (minOut + maxOut) / 2.0; // Xử lý vòng lặp đầu tiên tránh lỗi chia cho 0
+        return minOut + (value - minIn) * (maxOut - minOut) / (maxIn - minIn);
+    }
+
+    // Hàm đo thời gian
+    public static double timeTrial(int N) {
+        int[] a = new int[N];
+        for (int i = 0; i < N; i++) {
+            a[i] = StdRandom.uniformInt(-1000000, 1000000);
+        }
+        Stopwatch timer = new Stopwatch();
+        ThreeSum.count(a);
+        return timer.elapsedTime();
+    }
+
+    public static void main(String[] args) {
+        // Mở rộng cửa sổ theo chiều ngang (1000x500) để vẽ side-by-side
+        StdDraw.setCanvasSize(1000, 500);
+
+        // Cố định hệ tọa độ tổng từ 0.0 đến 1.0 (như tỷ lệ phần trăm màn hình)
+        StdDraw.setXscale(0, 1.0);
+        StdDraw.setYscale(0, 1.0);
+
+        // Bật Double Buffering để hình ảnh load xong ngầm rồi mới hiển thị, tránh giật nháy
+        StdDraw.enableDoubleBuffering();
+
+        List<Integer> nHistory = new ArrayList<>();
+        List<Double> timeHistory = new ArrayList<>();
+        List<Double> lgNHistory = new ArrayList<>();
+        List<Double> lgTimeHistory = new ArrayList<>();
+
+        for (int N = 250; true; N += N) {
+            double time = timeTrial(N);
+            if (time == 0.0) time = 0.001; // Fix lỗi log(0)
+
+            double lgN = Math.log(N) / Math.log(2);
+            double lgT = Math.log(time) / Math.log(2);
+
+            nHistory.add(N);
+            timeHistory.add(time);
+            lgNHistory.add(lgN);
+            lgTimeHistory.add(lgT);
+
+            // Xóa canvas cũ
+            StdDraw.clear();
+
+            // =========================================================
+            // 1. VẼ ĐỒ THỊ CHUẨN (Ép vào nửa TRÁI màn hình: X từ 0.05 -> 0.45)
+            // =========================================================
+            double maxN = nHistory.get(nHistory.size() - 1);
+            double maxT = timeHistory.get(timeHistory.size() - 1);
+
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.text(0.25, 0.95, "Standard Plot"); // Tiêu đề
+
+            // Vẽ 2 đường trục X, Y cho đồ thị trái
+            StdDraw.line(0.05, 0.1, 0.45, 0.1);
+            StdDraw.line(0.05, 0.1, 0.05, 0.9);
+
+            // Vẽ các đường nối xanh
+            StdDraw.setPenColor(StdDraw.BLUE);
+            for (int i = 1; i < nHistory.size(); i++) {
+                double x1 = map(nHistory.get(i-1), 0, maxN, 0.05, 0.45);
+                double y1 = map(timeHistory.get(i-1), 0, maxT, 0.1, 0.9);
+                double x2 = map(nHistory.get(i), 0, maxN, 0.05, 0.45);
+                double y2 = map(timeHistory.get(i), 0, maxT, 0.1, 0.9);
+                StdDraw.line(x1, y1, x2, y2);
+            }
+            // Vẽ các điểm đỏ
+            StdDraw.setPenColor(StdDraw.RED);
+            for (int i = 0; i < nHistory.size(); i++) {
+                double x = map(nHistory.get(i), 0, maxN, 0.05, 0.45);
+                double y = map(timeHistory.get(i), 0, maxT, 0.1, 0.9);
+                StdDraw.filledCircle(x, y, 0.005);
+            }
+
+            // =========================================================
+            // 2. VẼ ĐỒ THỊ LOG-LOG (Ép vào nửa PHẢI màn hình: X từ 0.55 -> 0.95)
+            // =========================================================
+            double minLgN = lgNHistory.get(0);
+            double maxLgN = lgNHistory.get(lgNHistory.size() - 1);
+
+            double minLgT = lgTimeHistory.get(0);
+            double maxLgT = lgTimeHistory.get(lgTimeHistory.size() - 1);
+            for (double t : lgTimeHistory) { // Quét tìm min, max để zoom vừa vặn
+                if (t < minLgT) minLgT = t;
+                if (t > maxLgT) maxLgT = t;
+            }
+
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.text(0.75, 0.95, "Log-Log Plot");
+
+            // Vẽ 2 đường trục X, Y cho đồ thị phải
+            StdDraw.line(0.55, 0.1, 0.95, 0.1);
+            StdDraw.line(0.55, 0.1, 0.55, 0.9);
+
+            StdDraw.setPenColor(StdDraw.BLUE);
+            for (int i = 1; i < lgNHistory.size(); i++) {
+                double x1 = map(lgNHistory.get(i-1), minLgN, maxLgN, 0.55, 0.95);
+                double y1 = map(lgTimeHistory.get(i-1), minLgT, maxLgT, 0.1, 0.9);
+                double x2 = map(lgNHistory.get(i), minLgN, maxLgN, 0.55, 0.95);
+                double y2 = map(lgTimeHistory.get(i), minLgT, maxLgT, 0.1, 0.9);
+                StdDraw.line(x1, y1, x2, y2);
+            }
+
+            StdDraw.setPenColor(StdDraw.RED);
+            for (int i = 0; i < lgNHistory.size(); i++) {
+                double x = map(lgNHistory.get(i), minLgN, maxLgN, 0.55, 0.95);
+                double y = map(lgTimeHistory.get(i), minLgT, maxLgT, 0.1, 0.9);
+                StdDraw.filledCircle(x, y, 0.005);
+            }
+
+            // Gọi hàm show để chính thức "đẩy" toàn bộ hình vẽ trong vòng lặp này lên màn hình
+            StdDraw.show();
+
+            System.out.printf("N = %d, time = %.3f\n", N, time);
+        }
+    }
+}
